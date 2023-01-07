@@ -39,8 +39,6 @@ jobs:
         uses: octokit/request-action@v2.x
         with:
           route: GET /repos/:repository/pulls/:issue_id
-          repository: ${{ github.repository }}
-          issue_id: ${{ github.event.issue.number }}
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
@@ -49,9 +47,7 @@ jobs:
         uses: octokit/request-action@v2.x
         with:
           route: POST /repos/:repository/deployments
-          repository: ${{ github.repository }}
           ref: ${{ fromJson(steps.get_pull_request_ref.outputs.data).head.ref }}
-          environment: ${{ needs.config.ouptputs.env }}
           auto_merge: false
         env:
           GITHUB_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
@@ -60,12 +56,9 @@ jobs:
         id: start_deployment
         uses: octokit/request-action@v2.x
         with:
-          route: POST /repos/:repository/deployments/:deployment/statuses
+          route: POST /repos/{repository}/deployments/{deployment}/statuses
           repository: ${{ github.repository }}
           deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
-          environment: ${{ needs.config.ouptputs.env }}
-          environment_url: https://example.com
-          log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           state: in_progress
           mediaType: '{"previews": ["flash", "ant-man"]}'
         env:
@@ -80,12 +73,9 @@ jobs:
         id: successful_deployment
         uses: octokit/request-action@v2.x
         with:
-          route: POST /repos/:repository/deployments/:deployment/statuses
+          route: POST /repos/{repository}/deployments/{deployment}/statuses
           repository: ${{ github.repository }}
           deployment: ${{ fromJson(steps.create_deployment.outputs.data).id }}
-          environment: ${{ needs.config.ouptputs.env }}
-          environment_url: https://example.com
-          log_url: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
           mediaType: '{"previews": ["ant-man"]}'
           state: success
         env:
