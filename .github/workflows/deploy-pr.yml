@@ -34,6 +34,9 @@ jobs:
         with:
           ref: ${{ steps.branch-deploy.outputs.ref }}
 
+      - name: Do deploy
+        run: echo "I'll deploy to wire-webapp-${{ steps.branch-deploy.outputs.environment }}"
+
       # Do some fake "regular" deployment logic here
       # conditionally run a regular deployment
       - name: fake regular deploy
