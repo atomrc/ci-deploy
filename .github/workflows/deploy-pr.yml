@@ -23,8 +23,9 @@ jobs:
         id: branch-deploy
         with:
           trigger: ".deploy"
+          update_branch: disabled
+          environment: edge
           environment_targets: edge, qa
-          production_environment: edge
 
       # Run your deployment logic for your project here - examples seen below
 
